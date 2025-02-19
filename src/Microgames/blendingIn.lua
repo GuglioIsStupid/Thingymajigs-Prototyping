@@ -49,8 +49,11 @@ function blendingIn:draw()
 end
 
 function blendingIn:clickHomer()
-    self.homerLaugh:play()
-    self.ok = true
+    if not self.homerLaugh:isPlaying() then
+        self.homerLaugh:setPitch(love.math.random(8,12)/10)
+        self.homerLaugh:play()
+        self.ok = true
+    end
 end
 
 function blendingIn:clickNotHomer()
