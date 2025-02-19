@@ -20,6 +20,9 @@ function testMicrogame:keypressed(key)
     self.ok = true
 end
 
+function testMicrogame:mousepressed(button)
+end
+
 function testMicrogame:fail()
     return nil
 end

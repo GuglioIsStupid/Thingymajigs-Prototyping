@@ -3,7 +3,9 @@ require("Microgames")
 
 function love.load()
     microgameHandler = MicrogameHandler:new()
-    microgameHandler:addMicrogame(testMicrogame)
+   -- microgameHandler:addMicrogame(testMicrogame)
+    microgameHandler:addMicrogame(blendingIn)
+
 end
 
 function love.update(dt)
@@ -16,4 +18,8 @@ end
 
 function love.keypressed(key)
     microgameHandler:keypressed(key)
+end
+
+function love.mousepressed(x,y,button)
+    microgameHandler:mousepressed(x,y,button)
 end

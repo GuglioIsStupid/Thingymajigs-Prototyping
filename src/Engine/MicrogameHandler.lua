@@ -108,4 +108,10 @@ function MicrogameHandler:keypressed(key)
     end
 end
 
+function MicrogameHandler:mousepressed(x,y,button)
+    if self.currentMicrogame then
+        self.currentMicrogame:mousepressed(x,y,button)
+    end
+end
+
 return MicrogameHandler
