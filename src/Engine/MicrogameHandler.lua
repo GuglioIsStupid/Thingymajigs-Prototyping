@@ -11,7 +11,7 @@ function MicrogameHandler:new()
     self.currentSpeed = 1
     self.completedMicrogames = 0
     self.currentZoom = 1
-    -- Every 5 microgames, the speed will increase by 0.5
+    -- Every 5 microgames, the speed will increase by 0.25
     self.speedIncreaseInterval = 5
     
     self.microgameTimeSeconds = 5
@@ -33,8 +33,9 @@ function MicrogameHandler:new()
     end
 
     self._scaleTween = nil
-    self.displayMicrogame = false
-    
+    self.displayMicrogame = true
+    self.firstGame = true
+    self.lastMicrogame = nil
     return self
 end
 
@@ -52,23 +53,66 @@ function MicrogameHandler:update(dt)
         end
     end
 
+    if self.currentMicrogame then
+        print(self.currentMicrogame.directions)
+    end
+
     if self.microgameTransition then
         self.microgameTransition:update(self, dt)
         if self.microgameTransition:isComplete(self) and not self._scaleTween then
-            self._scaleTween = TweenManager:tween(self, {currentZoom = 0.7}, 0.25, {ease = "inOutQuad", onComplete = function()
-                self.displayDirections = true
-                self.displayMicrogame = false
-                Timer.after(1, function()
-                    self.displayDirections = false
-                    self.displayMicrogame = true
+            if self.firstGame then
+                self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                if self.lastMicrogame then
+                    while self.currentMicrogame == self.lastMicrogame do
+                        local last = self.currentMicrogame
+                        self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                        table.insert(self.microgameRandomBag, last)
+                    end
+                end
+                self.lastMicrogame = self.currentMicrogame
+                self.currentMicrogame:onLoad()
+            end
+            self._scaleTween = TweenManager:tween(self, {currentZoom = 0.5}, 0.5 / self.currentSpeed, {ease = "bounceOut", onComplete = function()
+                if not self.firstGame then
                     self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                    if self.lastMicrogame then
+                        while self.currentMicrogame == self.lastMicrogame do
+                            local last = self.currentMicrogame
+                            self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                            table.insert(self.microgameRandomBag, last)
+                        end
+                    end
+                    self.lastMicrogame = self.currentMicrogame
+                    if not self.currentMicrogame then
+                        -- wtf??
+                        -- reset bag and pull
+                        self.microgameRandomBag = {}
+                        for i = 1, #self.microgames do
+                            table.insert(self.microgameRandomBag, i)
+                        end
+                        self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                        while self.currentMicrogame == self.lastMicrogame do
+                            local last = self.currentMicrogame
+                            self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                            table.insert(self.microgameRandomBag, last)
+                        end
+                    end
                     self.currentMicrogame:onLoad()
-                    self._scaleTween = TweenManager:tween(self, {currentZoom = 1}, 0.25, {ease = "inOutQuad", onComplete = function()
+                end
+                if self.currentMicrogame and self.currentMicrogame.close then
+                    self.currentMicrogame:close()
+                end
+                self.displayDirections = true
+                Timer.after(1 / self.currentSpeed, function()
+                    self.displayDirections = false
+                    self._scaleTween = TweenManager:tween(self, {currentZoom = 1}, 0.5 / self.currentSpeed, {ease = "bounceOut", onComplete = function()
                         self.microgameTransition = nil
                         self.microgameTransitionTimer = 0
                         self.currentMicrogame:start()
 
                         self._scaleTween = nil
+                        self.microgameTime = self.microgameTimeSeconds
+                        self.firstGame = false
                     end})
                 end)
             end})
@@ -78,10 +122,12 @@ function MicrogameHandler:update(dt)
             self.currentMicrogame:update(dt)
             if self.currentMicrogame:checkForCompletion() and self.microgameTime <= 0 then
                 self.completedMicrogames = self.completedMicrogames + 1
-                self.currentMicrogame = nil
+                if self.currentMicrogame.finish then
+                    self.currentMicrogame:finish()
+                end
                 self.microgameTime = self.microgameTimeSeconds
                 if self.completedMicrogames % self.speedIncreaseInterval == 0 then
-                    self.currentSpeed = self.currentSpeed + 0.5
+                    self.currentSpeed = self.currentSpeed + 0.25
                 end
                 if self.completedMicrogames % self.microgameTimeDecreaseInterval == 0 then
                     self.microgameTime = math.max(self.microgameTime - self.microgameTimeDecrease, self.microgameTimeMinimum)
@@ -93,7 +139,9 @@ function MicrogameHandler:update(dt)
                 self.microgameTransitionTimer = 0
             elseif self.microgameTime <= 0 then
                 self.microgameTransition = self.currentMicrogame:fail()
-                self.currentMicrogame = nil
+                if self.currentMicrogame.finish then
+                    self.currentMicrogame:finish()
+                end
                 self.microgameTime = self.microgameTimeSeconds
 
                 -- transition to next
@@ -104,7 +152,6 @@ function MicrogameHandler:update(dt)
                 self.microgameTime = self.microgameTime - dt
             end
         else
-            self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
             -- transition
             self.microgameTransition = self.basemicrogameTransition
         end

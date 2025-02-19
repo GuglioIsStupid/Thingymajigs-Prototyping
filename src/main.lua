@@ -10,6 +10,7 @@ function love.load()
     microgameHandler = MicrogameHandler:new()
    -- microgameHandler:addMicrogame(testMicrogame)
     microgameHandler:addMicrogame(blendingIn)
+    microgameHandler:addMicrogame(findHim)
 
     Timer.after(1, function ()
         print("1 second has passed")
