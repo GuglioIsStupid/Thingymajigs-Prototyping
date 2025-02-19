@@ -52,11 +52,7 @@ function MicrogameHandler:update(dt)
             table.insert(self.microgameRandomBag, i)
         end
     end
-
-    if self.currentMicrogame then
-        print(self.currentMicrogame.directions)
-    end
-
+    
     if self.microgameTransition then
         self.microgameTransition:update(self, dt)
         if self.microgameTransition:isComplete(self) and not self._scaleTween then
@@ -111,7 +107,7 @@ function MicrogameHandler:update(dt)
                         self.currentMicrogame:start()
 
                         self._scaleTween = nil
-                        self.microgameTime = self.microgameTimeSeconds
+                        self.microgameTime = self.microgameTimeSeconds / self.currentSpeed
                         self.firstGame = false
                     end})
                 end)
@@ -125,12 +121,10 @@ function MicrogameHandler:update(dt)
                 if self.currentMicrogame.finish then
                     self.currentMicrogame:finish()
                 end
-                self.microgameTime = self.microgameTimeSeconds
+                self.microgameTime = self.microgameTimeSeconds / self.currentSpeed
                 if self.completedMicrogames % self.speedIncreaseInterval == 0 then
                     self.currentSpeed = self.currentSpeed + 0.25
-                end
-                if self.completedMicrogames % self.microgameTimeDecreaseInterval == 0 then
-                    self.microgameTime = math.max(self.microgameTime - self.microgameTimeDecrease, self.microgameTimeMinimum)
+                    print("Speed increased to " .. self.currentSpeed)
                 end
                 self.wasCompleted = true
 
@@ -142,7 +136,7 @@ function MicrogameHandler:update(dt)
                 if self.currentMicrogame.finish then
                     self.currentMicrogame:finish()
                 end
-                self.microgameTime = self.microgameTimeSeconds
+                self.microgameTime = self.microgameTimeSeconds / self.currentSpeed
 
                 -- transition to next
                 self.microgameTransition = self.basemicrogameTransition

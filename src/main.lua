@@ -18,7 +18,7 @@ function love.load()
 
     --[[ TweenManager:tween(obj, {y = 400}, 1) ]]
     local function doTweenShit()
-        TweenManager:tween(obj, {y = 400}, 1, {type = TweenType.PINGPONG, ease = "bounceOut"})
+        TweenManager:tween(obj, {y = 400}, 1 / microgameHandler.currentSpeed, {type = TweenType.PINGPONG, ease = "bounceOut"})
     end
 
     doTweenShit()
