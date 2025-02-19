@@ -1,15 +1,20 @@
 local blendingIn = {}
 
-function blendingIn:start()
-    self.directions = "Click Homer!"
-    self.ok = false
-    self.mouseX, self.mouseY = love.mouse.getPosition()
+function blendingIn:preload()
     self.assetsFolder = "Assets/Microgames/blendingIn/"
+
     self.background = love.graphics.newImage(self.assetsFolder .. "bg.png")
     self.homie = love.graphics.newImage(self.assetsFolder .. "homie.png")
     self.homer = love.graphics.newImage(self.assetsFolder .. "homer.png")
     self.homerLaugh = love.audio.newSource(self.assetsFolder .. "homerLaugh.mp3", "static")
     self.homieGrrr = love.audio.newSource(self.assetsFolder .. "GRRR.mp3", "static")
+end
+
+function blendingIn:start()
+    self.directions = "Click Homer!"
+    self.ok = false
+    self.failed = false
+    self.mouseX, self.mouseY = love.mouse.getPosition()
 
     self.homiePositions = {
         {180,163},
@@ -26,7 +31,7 @@ function blendingIn:update(dt)
 end
 
 function blendingIn:checkForCompletion()
-    return self.ok
+    return self.ok and not self.failed
 end
 
 function blendingIn:draw()
@@ -49,6 +54,7 @@ end
 function blendingIn:clickNotHomer()
     self.homieGrrr:play()
     self.ok = false
+    self.failed = true
 end
 
 function blendingIn:mousepressed(x,y,button)
@@ -59,9 +65,10 @@ function blendingIn:mousepressed(x,y,button)
                 return
             end
         end
+
+        self:clickNotHomer()
     end
 
-    self:clickNotHomer()
 end
 
 function blendingIn:fail()

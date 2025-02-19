@@ -35,6 +35,9 @@ function MicrogameHandler:new()
 end
 
 function MicrogameHandler:addMicrogame(microgame)
+    if microgame.preload then
+        microgame:preload()
+    end
     table.insert(self.microgames, microgame)
 end
 
