@@ -3,6 +3,7 @@ local MicrogameHandler = MiniClass:extend()
 function MicrogameHandler:new()
     MiniClass.new(self)
     self.microgames = {}
+    self.microgameRandomBag = {}
     self.currentMicrogame = nil
     self.microgameTransition = nil
     self.microGameTransitionTimer = 0
@@ -42,12 +43,18 @@ end
 -- if it hasn't, it will return false
 
 function MicrogameHandler:update(dt)
+    if #self.microgameRandomBag == 0 then
+        for i = 1, #self.microgames do
+            table.insert(self.microgameRandomBag, i)
+        end
+    end
     if self.microgameTransition then
         self.microgameTransition:update(self, dt)
         if self.microgameTransition:isComplete(self) then
             self.microgameTransition = nil
             if not self.currentMicrogame then
-                self.currentMicrogame = self.microgames[love.math.random(1, #self.microgames)]
+                self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                self.currentMicrogame:start()
             end
             self.currentMicrogame:start()
 
@@ -85,7 +92,7 @@ function MicrogameHandler:update(dt)
                 self.microgameTime = self.microgameTime - dt
             end
         else
-            self.currentMicrogame = self.microgames[love.math.random(1, #self.microgames)]
+            self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
             -- transition
             self.microgameTransition = self.basemicrogameTransition
         end
@@ -103,12 +110,18 @@ function MicrogameHandler:draw()
 end
 
 function MicrogameHandler:keypressed(key)
+    if self.microgameTransition then
+        return
+    end
     if self.currentMicrogame then
         self.currentMicrogame:keypressed(key)
     end
 end
 
 function MicrogameHandler:mousepressed(x,y,button)
+    if self.microgameTransition then
+        return
+    end
     if self.currentMicrogame then
         self.currentMicrogame:mousepressed(x,y,button)
     end

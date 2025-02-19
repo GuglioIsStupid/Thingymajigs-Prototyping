@@ -6,9 +6,13 @@ function love.load()
    -- microgameHandler:addMicrogame(testMicrogame)
     microgameHandler:addMicrogame(blendingIn)
 
+    Timer.after(1, function ()
+        print("1 second has passed")
+    end, -1)
 end
 
 function love.update(dt)
+    Timer.update(dt)
     microgameHandler:update(dt)
 end
 
