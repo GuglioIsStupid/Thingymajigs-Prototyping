@@ -1,6 +1,11 @@
 require("Engine")
 require("Microgames")
 
+local obj = {
+    y = 200,
+    x = 200
+}
+
 function love.load()
     microgameHandler = MicrogameHandler:new()
    -- microgameHandler:addMicrogame(testMicrogame)
@@ -9,15 +14,27 @@ function love.load()
     Timer.after(1, function ()
         print("1 second has passed")
     end, -1)
+
+    --[[ TweenManager:tween(obj, {y = 400}, 1) ]]
+    local function doTweenShit()
+        TweenManager:tween(obj, {y = 400}, 1, {type = TweenType.PINGPONG, ease = "bounceOut"})
+    end
+
+    doTweenShit()
 end
 
 function love.update(dt)
     Timer.update(dt)
+    TweenManager:update(dt)
     microgameHandler:update(dt)
 end
 
 function love.draw()
     microgameHandler:draw()
+
+    love.graphics.setColor(1,0,0)
+    love.graphics.rectangle("fill", obj.x, obj.y, 50, 50)
+    love.graphics.setColor(1,1,1)
 end
 
 function love.keypressed(key)
