@@ -1,6 +1,7 @@
 local blendingIn = {}
 
 function blendingIn:preload()
+    self.directions = "Click Homer!"
     self.assetsFolder = "Assets/Microgames/blendingIn/"
 
     self.background = love.graphics.newImage(self.assetsFolder .. "bg.png")
@@ -8,13 +9,6 @@ function blendingIn:preload()
     self.homer = love.graphics.newImage(self.assetsFolder .. "homer.png")
     self.homerLaugh = love.audio.newSource(self.assetsFolder .. "homerLaugh.mp3", "static")
     self.homieGrrr = love.audio.newSource(self.assetsFolder .. "GRRR.mp3", "static")
-end
-
-function blendingIn:start()
-    self.directions = "Click Homer!"
-    self.ok = false
-    self.failed = false
-    self.mouseX, self.mouseY = love.mouse.getPosition()
 
     self.homiePositions = {
         {180,163},
@@ -22,6 +16,11 @@ function blendingIn:start()
         {650,150},
         {954,118}
     }
+end
+
+function blendingIn:start()
+    self.ok = false
+    self.failed = false
 
     self.homerPosition = love.math.random(1,#self.homiePositions)
 end
@@ -37,7 +36,8 @@ end
 function blendingIn:draw()
     love.graphics.draw(self.background)
     for i = 1,#self.homiePositions do
-        x,y = self.homiePositions[i][1],self.homiePositions[i][2]
+        local x, y = self.homiePositions[i][1],self.homiePositions[i][2]
+        
         if i ~= self.homerPosition then
             love.graphics.draw(self.homie, x, y)
         else
