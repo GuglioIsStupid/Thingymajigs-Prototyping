@@ -18,11 +18,13 @@ function blendingIn:preload()
     }
 end
 
+function blendingIn:onLoad()
+    self.homerPosition = love.math.random(1,#self.homiePositions)
+end
+
 function blendingIn:start()
     self.ok = false
     self.failed = false
-
-    self.homerPosition = love.math.random(1,#self.homiePositions)
 end
 
 function blendingIn:update(dt)
@@ -37,7 +39,7 @@ function blendingIn:draw()
     love.graphics.draw(self.background)
     for i = 1,#self.homiePositions do
         local x, y = self.homiePositions[i][1],self.homiePositions[i][2]
-        
+
         if i ~= self.homerPosition then
             love.graphics.draw(self.homie, x, y)
         else
@@ -68,7 +70,6 @@ function blendingIn:mousepressed(x,y,button)
 
         self:clickNotHomer()
     end
-
 end
 
 function blendingIn:fail()

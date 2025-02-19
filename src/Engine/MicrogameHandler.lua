@@ -22,14 +22,18 @@ function MicrogameHandler:new()
 
     self.wasCompleted = false
 
+    self.displayDirections = false
     self.basemicrogameTransition = {}
     self.basemicrogameTransition.update = function(_, parent, dt) 
         parent.microgameTransitionTimer = (parent.microgameTransitionTimer or 0) + dt
     end
-    self.basemicrogameTransition.draw = function() love.graphics.print("Transitioning to next microgame | Last microgame was: " .. (self.wasCompleted and "completed" or "failed"), 100, 100) end
+    self.basemicrogameTransition.draw = function() end
     self.basemicrogameTransition.isComplete = function(self, parent)
         return parent.microgameTransitionTimer >= parent.microGameTransitionTime
     end
+
+    self._scaleTween = nil
+    self.displayMicrogame = false
     
     return self
 end
@@ -41,29 +45,33 @@ function MicrogameHandler:addMicrogame(microgame)
     table.insert(self.microgames, microgame)
 end
 
--- each microgame has a function called "checkForCompletion"
--- this function will check if the microgame has been completed
--- if it has, it will return true
--- if it hasn't, it will return false
-
 function MicrogameHandler:update(dt)
     if #self.microgameRandomBag == 0 then
         for i = 1, #self.microgames do
             table.insert(self.microgameRandomBag, i)
         end
     end
+
     if self.microgameTransition then
         self.microgameTransition:update(self, dt)
-        if self.microgameTransition:isComplete(self) then
-            self.microgameTransition = nil
-            if not self.currentMicrogame then
-                self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
-                self.currentMicrogame:start()
-            end
-            self.currentMicrogame:start()
+        if self.microgameTransition:isComplete(self) and not self._scaleTween then
+            self._scaleTween = TweenManager:tween(self, {currentZoom = 0.7}, 0.25, {ease = "inOutQuad", onComplete = function()
+                self.displayDirections = true
+                self.displayMicrogame = false
+                Timer.after(1, function()
+                    self.displayDirections = false
+                    self.displayMicrogame = true
+                    self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+                    self.currentMicrogame:onLoad()
+                    self._scaleTween = TweenManager:tween(self, {currentZoom = 1}, 0.25, {ease = "inOutQuad", onComplete = function()
+                        self.microgameTransition = nil
+                        self.microgameTransitionTimer = 0
+                        self.currentMicrogame:start()
 
-            -- reset time stuff
-            self.microgameTime = self.microgameTimeSeconds
+                        self._scaleTween = nil
+                    end})
+                end)
+            end})
         end
     else
         if self.currentMicrogame then
@@ -104,12 +112,29 @@ function MicrogameHandler:update(dt)
 end
 
 function MicrogameHandler:draw()
-    if self.microgameTransition then
+    love.graphics.push()
+    love.graphics.translate(1280/2, 720/2)
+    love.graphics.scale(self.currentZoom, self.currentZoom)
+    love.graphics.translate(-1280/2, -720/2)
+    love.graphics.rectangle("fill", 0, 0, 1280, 720)
+    if self.currentMicrogame and self.displayMicrogame then
+        self.currentMicrogame:draw()
+    end
+    love.graphics.pop()
+
+    if self.microgameTransition and self.displayMicrogame then
         self.microgameTransition:draw()
-    else
-        if self.currentMicrogame then
-            self.currentMicrogame:draw()
+    end
+
+    if self.currentMicrogame and self.displayDirections then
+        love.graphics.setColor(0, 0, 0)
+        for x = -1, 1, 2 do
+            for y = -1, 1, 2 do
+                love.graphics.print(self.currentMicrogame.directions, 5 + x, 5 + y)
+            end
         end
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.print(self.currentMicrogame.directions, 5, 5)
     end
 end
 
