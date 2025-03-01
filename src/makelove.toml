@@ -1,0 +1,9 @@
+name = "Thingymajigs" # TODO: Get an actual game name.
+default_targets = ["win64", "macos"]
+build_directory = ".build"
+
+love_files = [
+    "::git-ls-tree::",
+    "-*/.*",
+    "-./makelove*"
+]
