@@ -1,4 +1,4 @@
-local path = ... .. "."
+local path = (... .. "."):gsub("init.", "")
 
 MiniClass = require(path .. "MiniClass")
 MicrogameHandler = require(path .. "MicrogameHandler")

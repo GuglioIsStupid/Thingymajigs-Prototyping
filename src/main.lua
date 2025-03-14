@@ -1,3 +1,4 @@
+
 require("Engine")
 require("Microgames")
 
@@ -25,6 +26,7 @@ function love.load()
 end
 
 function love.update(dt)
+    print(love.timer.getTime())
     Timer.update(dt)
     TweenManager:update(dt)
     microgameHandler:update(dt)
