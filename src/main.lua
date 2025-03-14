@@ -22,6 +22,11 @@ function StateCallback(state, callback, ...)
     end
 end
 
+Resolution = {
+    Width = 1280,
+    Height = 720
+}
+
 function love.load()
     microgameHandler = MicrogameHandler:new()
    -- microgameHandler:addMicrogame(testMicrogame)
@@ -38,7 +43,7 @@ function love.load()
 
     doTweenShit() ]]
 
-    SwitchState("intro")
+    SwitchState("menu")
 end
 
 function love.update(dt)
@@ -63,10 +68,26 @@ end
 
 function love.keypressed(key)
    --[[  microgameHandler:keypressed(key) ]]
+
+   StateCallback(state, "keypressed", key)
 end
 
 function love.mousepressed(x,y,button)
    --[[  microgameHandler:mousepressed(x,y,button) ]]
+
+    StateCallback(state, "mousepressed", x, y, button)
+end
+
+function love.mousereleased(x,y,button)
+   --[[  microgameHandler:mousereleased(x,y,button) ]]
+
+    StateCallback(state, "mousereleased", x, y, button)
+end
+
+function love.mousemoved(x,y)
+   --[[  microgameHandler:mousemoved(x,y) ]]
+
+    StateCallback(state, "mousemoved", x, y)
 end
 
 function love.quit()

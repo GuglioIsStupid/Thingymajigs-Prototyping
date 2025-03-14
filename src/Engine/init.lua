@@ -10,3 +10,6 @@ TweenType = require(path .. "Backend.TweenType")
 VarTween = require(path .. "Backend.VarTween")
 
 TweenManager = require(path .. "Tween")
+
+-- UI ELEMENTS
+Button = require(path .. "UI.Button")
