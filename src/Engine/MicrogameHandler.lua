@@ -93,7 +93,7 @@ function MicrogameHandler:update(dt)
                             table.insert(self.microgameRandomBag, last)
                         end
                     end
-                    self.currentMicrogame:onLoad()
+                    if self.currentMicrogame.onLoad then self.currentMicrogame:onLoad() end
                 end
                 if self.currentMicrogame and self.currentMicrogame.close then
                     self.currentMicrogame:close()
@@ -104,7 +104,7 @@ function MicrogameHandler:update(dt)
                     self._scaleTween = TweenManager:tween(self, {currentZoom = 1}, 0.5 / self.currentSpeed, {ease = "bounceOut", onComplete = function()
                         self.microgameTransition = nil
                         self.microgameTransitionTimer = 0
-                        self.currentMicrogame:start()
+                        if self.currentMicrogame.start then self.currentMicrogame:start() end
 
                         self._scaleTween = nil
                         self.microgameTime = self.microgameTimeSeconds / self.currentSpeed
@@ -115,7 +115,7 @@ function MicrogameHandler:update(dt)
         end
     else
         if self.currentMicrogame then
-            self.currentMicrogame:update(dt)
+            if self.currentMicrogame.update then self.currentMicrogame:update(dt) end
             if self.currentMicrogame:checkForCompletion() and self.microgameTime <= 0 then
                 self.completedMicrogames = self.completedMicrogames + 1
                 if self.currentMicrogame.finish then
@@ -183,7 +183,7 @@ function MicrogameHandler:keypressed(key)
     if self.microgameTransition then
         return
     end
-    if self.currentMicrogame then
+    if self.currentMicrogame and self.currentMicrogame.keypressed then
         self.currentMicrogame:keypressed(key)
     end
 end
@@ -192,7 +192,7 @@ function MicrogameHandler:mousepressed(x,y,button)
     if self.microgameTransition then
         return
     end
-    if self.currentMicrogame then
+    if self.currentMicrogame and self.currentMicrogame.mousepressed then
         self.currentMicrogame:mousepressed(x,y,button)
     end
 end
