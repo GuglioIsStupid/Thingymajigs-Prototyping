@@ -1,1 +1,3 @@
-local BaseMicrogame = require("Microgames.baseMicrogame")
+local catchGame = BaseMicrogame:extend("catchGame")
+
+return catchGame

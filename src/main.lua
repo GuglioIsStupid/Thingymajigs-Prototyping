@@ -7,6 +7,7 @@ local state = ""
 STATES = {
     intro = require("States.Intro"),
     menu = require("States.Menu"),
+    game = require("States.Game"),
 }
 
 function SwitchState(newState)
@@ -30,8 +31,9 @@ Resolution = {
 function love.load()
     microgameHandler = MicrogameHandler:new()
    -- microgameHandler:addMicrogame(testMicrogame)
-    microgameHandler:addMicrogame(blendingIn)
-    microgameHandler:addMicrogame(findHim)
+    --[[ microgameHandler:addMicrogame(blendingIn)
+    microgameHandler:addMicrogame(findHim) ]]
+    microgameHandler:addMicrogame(catchMicrogame)
 
     --[[ Timer.after(1, function ()
         print("1 second has passed")
@@ -43,7 +45,7 @@ function love.load()
 
     doTweenShit() ]]
 
-    SwitchState("menu")
+    SwitchState("game")
 end
 
 function love.update(dt)

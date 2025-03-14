@@ -1,27 +1,34 @@
 local BaseMicrogame = MiniClass:extend("BaseMicrogame")
 
-function testMicrogame:start()
+function BaseMicrogame:preload()
+    self.directions = "RESET ME!"
+end
+
+function BaseMicrogame:start()
     self.ok = false
 end
 
-function testMicrogame:update(dt)
+function BaseMicrogame:onLoad()
 end
 
-function testMicrogame:checkForCompletion()
+function BaseMicrogame:update(dt)
+end
+
+function BaseMicrogame:checkForCompletion()
     return self.ok
 end
 
-function testMicrogame:draw()
+function BaseMicrogame:draw()
     
 end
 
-function testMicrogame:keypressed(key)
+function BaseMicrogame:keypressed(key)
 end
 
-function testMicrogame:mousepressed(button)
+function BaseMicrogame:mousepressed(button)
 end
 
-function testMicrogame:fail()
+function BaseMicrogame:fail()
     return nil
 end
 
