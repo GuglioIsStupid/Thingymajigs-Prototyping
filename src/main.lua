@@ -8,6 +8,7 @@ STATES = {
     intro = require("States.Intro"),
     menu = require("States.Menu"),
     game = require("States.Game"),
+    debug = require("States.Debug.Debug"),
 }
 
 function SwitchState(newState)
@@ -30,10 +31,13 @@ Resolution = {
 
 function love.load()
     microgameHandler = MicrogameHandler:new()
-   -- microgameHandler:addMicrogame(testMicrogame)
-    --[[ microgameHandler:addMicrogame(blendingIn)
-    microgameHandler:addMicrogame(findHim) ]]
+
+
+    microgameHandler:addMicrogame(testMicrogame)
+    microgameHandler:addMicrogame(blendingIn)
+    microgameHandler:addMicrogame(findHim)
     microgameHandler:addMicrogame(catchMicrogame)
+    microgameHandler:addMicrogame(harmoni)
 
     --[[ Timer.after(1, function ()
         print("1 second has passed")
@@ -71,7 +75,11 @@ end
 function love.keypressed(key)
    --[[  microgameHandler:keypressed(key) ]]
 
-   StateCallback(state, "keypressed", key)
+    StateCallback(state, "keypressed", key)
+
+   if key == "8" then
+    SwitchState("debug")
+   end
 end
 
 function love.mousepressed(x,y,button)
