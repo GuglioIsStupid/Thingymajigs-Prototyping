@@ -1,4 +1,4 @@
-local testMicrogame = {}
+local testMicrogame = BaseMicrogame:extend("testMicrogame")
 
 function testMicrogame:start()
     self.ok = false

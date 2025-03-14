@@ -1,4 +1,4 @@
-local findHim = {}
+local findHim = BaseMicrogame:extend("findHim")
 
 function findHim:preload()
     self.directions = "Find Him."

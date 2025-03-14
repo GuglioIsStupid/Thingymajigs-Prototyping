@@ -1,4 +1,4 @@
-local blendingIn = {}
+local blendingIn = BaseMicrogame:extend("blendingIn")
 
 function blendingIn:preload()
     self.directions = "Click Homer!"
