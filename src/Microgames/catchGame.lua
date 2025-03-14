@@ -1,0 +1,1 @@
+local BaseMicrogame = require("Microgames.baseMicrogame")
