@@ -4,11 +4,12 @@ function blendingIn:preload()
     self.directions = "Click Homer!"
     self.assetsFolder = "Assets/Microgames/blendingIn/"
     self.images = loadImagesFromDir(self.assetsFolder)
+    self.sounds = loadSoundsFromDir(self.assetsFolder)
     self.background = self.images["bg"]
     self.homie = self.images["homie"]
     self.homer = self.images["homer"]
-    self.homerLaugh = love.audio.newSource(self.assetsFolder .. "homerLaugh.mp3", "static")
-    self.homieGrrr = love.audio.newSource(self.assetsFolder .. "GRRR.mp3", "static")
+    self.homerLaugh = self.sounds["homerLaugh"]
+    self.homieGrrr = self.sounds["GRRR"]
 
     self.homiePositions = {
         {180,163},
