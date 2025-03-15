@@ -3,6 +3,10 @@ require("Engine")
 require("Microgames")
 
 local state = ""
+local discordIPC_OK
+discordIPC_OK, discordIPC = pcall(require, "Lib.discordIPC")
+if not discordIPC_OK then discordIPC = nil end
+if type(discordIPC) ~= "table" then discordIPC = nil end
 
 STATES = {
     intro = require("States.Intro"),
@@ -29,6 +33,38 @@ Resolution = {
     Height = 720
 }
 
+local function PRINT_DEBUG()
+    local str = "UPS: " .. love.timer.getFPS() .. " | DPS: " .. love.timer.getDrawFPS() .. "\n"
+    local stats = love.graphics.getStats()
+    str = str .. "Memory: " .. string.format("%.2f", collectgarbage("count")/1024) .. "MB\n"
+    str = str .. "Graphics Memory: " .. string.format("%.2f", stats.texturememory / 1024 / 1024) .. "MB\n"
+    str = str .. "Draw Calls: " .. stats.drawcalls .. " (" .. stats.drawcallsbatched .. " batched)\n"
+    str = str .. "Canvas Switches: " .. stats.canvasswitches .. "\n"
+    str = str .. "Shader Switches: " .. stats.shaderswitches .. "\n"
+    str = str .. "Images: " .. stats.images .. "\n"
+    str = str .. "Canvases: " .. stats.canvases .. "\n"
+    str = str .. "Fonts: " .. stats.fonts .. "\n"
+
+    love.graphics.setColor(0, 0, 0)
+    for x = -1, 1, 2 do
+        for y = -1, 1, 2 do
+            love.graphics.print(str, 5 + x, 5 + y)
+        end
+    end
+
+    love.graphics.setColor(1, 1, 1)
+
+    love.graphics.print(str, 5, 5)
+end
+
+function IPCActivity(activity)
+    if discordIPC then
+        discordIPC.activity = activity
+
+        discordIPC:sendActivity()
+    end
+end
+
 function love.load()
     microgameHandler = MicrogameHandler:new()
 
@@ -50,6 +86,8 @@ function love.load()
     doTweenShit() ]]
 
     SwitchState("game")
+
+    --if discordIPC then discordIPC:initID("<PUT_ID_HERE_WHEN_WE_HAVE_ONE>") end
 end
 
 function love.update(dt)
@@ -62,14 +100,16 @@ function love.update(dt)
     StateCallback(state, "update", dt)
 end
 
-function love.draw()
+function love.draw(dt)
    --[[  microgameHandler:draw()
 
     love.graphics.setColor(1,0,0)
     love.graphics.rectangle("fill", obj.x, obj.y, 50, 50)
     love.graphics.setColor(1,1,1) ]]
 
-    StateCallback(state, "draw")
+    StateCallback(state, "draw", dt)
+
+    PRINT_DEBUG()
 end
 
 function love.keypressed(key)
@@ -101,4 +141,5 @@ function love.mousemoved(x,y)
 end
 
 function love.quit()
+    if discordIPC then discordIPC:close() end
 end

@@ -1,5 +1,7 @@
 local path = (... .. "."):gsub("init.", "")
 
+require(path .. "Backend.LoveOverrides")
+
 MiniClass = require(path .. "MiniClass")
 MicrogameHandler = require(path .. "MicrogameHandler")
 Timer = require(path .. "Timer")

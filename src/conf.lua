@@ -11,4 +11,6 @@ function love.conf(t)
     t.woke = true
 
     t.version = "11.5"
+
+    t.window.vsync = 0
 end

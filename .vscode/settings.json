@@ -5,6 +5,8 @@
     ],
     "Lua.runtime.version": "LuaJIT",
     "Lua.diagnostics.disable": [
-        "lowercase-global"
+        "lowercase-global",
+        "inject-field",
+        "undefined-field"
     ],
 }
