@@ -13,4 +13,7 @@ function love.conf(t)
     t.version = "11.5"
 
     t.window.vsync = 0
+
+    t.window.resizable = true
+    t.identity = "thingymajigs"
 end

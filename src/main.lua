@@ -30,8 +30,16 @@ end
 
 Resolution = {
     Width = 1280,
-    Height = 720
+    Height = 720,
+    _canvas = nil,
+    _offset = {x = 0, y = 0},
+    _scale = 1,
+    convertMouse = function(x, y)
+        return (x - Resolution._offset.x) / Resolution._scale, (y - Resolution._offset.y) / Resolution._scale
+    end
 }
+
+Resolution._canvas = love.graphics.newCanvas(Resolution.Width, Resolution.Height)
 
 local function PRINT_DEBUG()
     local str = "UPS: " .. love.timer.getFPS() .. " | DPS: " .. love.timer.getDrawFPS() .. "\n"
@@ -68,7 +76,6 @@ end
 function love.load()
     microgameHandler = MicrogameHandler:new()
 
-
     microgameHandler:addMicrogame(testMicrogame)
     microgameHandler:addMicrogame(blendingIn)
     microgameHandler:addMicrogame(findHim)
@@ -81,9 +88,7 @@ function love.load()
 
     local function doTweenShit()
         TweenManager:tween(obj, {y = 400}, 1 / microgameHandler.currentSpeed, {type = TweenType.PINGPONG, ease = "bounceOut"})
-    end
-
-    doTweenShit() ]]
+    end]]
 
     SwitchState("game")
 
@@ -93,51 +98,54 @@ end
 function love.update(dt)
     Timer.update(dt)
     TweenManager:update(dt)
-    --[[ print(love.timer.getTime())
-    Timer.update(dt)
-    TweenManager:update(dt)
-    microgameHandler:update(dt) ]]
+
     StateCallback(state, "update", dt)
 end
 
-function love.draw(dt)
-   --[[  microgameHandler:draw()
+function love.resize(w, h)
+    Resolution._scale = math.min(w / Resolution.Width, h / Resolution.Height)
+    Resolution._offset.x = (w - Resolution.Width * Resolution._scale) / 2
+    Resolution._offset.y = (h - Resolution.Height * Resolution._scale) / 2
+end
 
-    love.graphics.setColor(1,0,0)
-    love.graphics.rectangle("fill", obj.x, obj.y, 50, 50)
-    love.graphics.setColor(1,1,1) ]]
+function love.draw(dt)
+
+    love.graphics.setCanvas(Resolution._canvas)
+    love.graphics.clear()
 
     StateCallback(state, "draw", dt)
+
+    love.graphics.setCanvas()
+
+    love.graphics.draw(Resolution._canvas, Resolution._offset.x, Resolution._offset.y, 0, Resolution._scale, Resolution._scale)
 
     PRINT_DEBUG()
 end
 
 function love.keypressed(key)
-   --[[  microgameHandler:keypressed(key) ]]
-
     StateCallback(state, "keypressed", key)
 
-   if key == "8" then
-    SwitchState("debug")
-   end
+    if key == "8" then
+        SwitchState("debug")
+    end
 end
 
 function love.mousepressed(x,y,button)
-   --[[  microgameHandler:mousepressed(x,y,button) ]]
+   local nx, ny = Resolution.convertMouse(x, y)
 
-    StateCallback(state, "mousepressed", x, y, button)
+    StateCallback(state, "mousepressed", nx, ny, button)
 end
 
 function love.mousereleased(x,y,button)
-   --[[  microgameHandler:mousereleased(x,y,button) ]]
+    local nx, ny = Resolution.convertMouse(x, y)
 
-    StateCallback(state, "mousereleased", x, y, button)
+    StateCallback(state, "mousereleased", nx, ny, button)
 end
 
-function love.mousemoved(x,y)
-   --[[  microgameHandler:mousemoved(x,y) ]]
+function love.mousemoved(x,y,dx,dy)
+    local nx, ny = Resolution.convertMouse(x, y)
 
-    StateCallback(state, "mousemoved", x, y)
+    StateCallback(state, "mousemoved", nx, ny, dx, dy)
 end
 
 function love.quit()
