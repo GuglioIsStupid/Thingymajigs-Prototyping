@@ -8,6 +8,7 @@ function love.conf(t)
     t.window.title = "Thingymajigs" .. (IS_DEBUG and " - Debug" or "")
     t.window.width = 1280
     t.window.height = 720
+    t.woke = true
 
     t.version = "11.5"
 end
