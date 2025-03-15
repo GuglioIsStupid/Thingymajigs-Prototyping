@@ -16,7 +16,7 @@ function testMicrogame:draw()
     love.graphics.print("Press any key to complete", 100, 120)
 end
 
-function testMicrogame:keypressed(key)
+function testMicrogame:keypressed(key) 
     self.ok = true
 end
 

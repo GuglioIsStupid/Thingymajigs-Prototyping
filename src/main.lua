@@ -81,6 +81,7 @@ function love.load()
     microgameHandler:addMicrogame(findHim)
     microgameHandler:addMicrogame(catchMicrogame)
     microgameHandler:addMicrogame(harmoni)
+    microgameHandler:addMicrogame(rpgBattle)
 
     --[[ Timer.after(1, function ()
         print("1 second has passed")
