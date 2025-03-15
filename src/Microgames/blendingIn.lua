@@ -3,10 +3,10 @@ local blendingIn = BaseMicrogame:extend("blendingIn")
 function blendingIn:preload()
     self.directions = "Click Homer!"
     self.assetsFolder = "Assets/Microgames/blendingIn/"
-
-    self.background = love.graphics.newImage(self.assetsFolder .. "bg.png")
-    self.homie = love.graphics.newImage(self.assetsFolder .. "homie.png")
-    self.homer = love.graphics.newImage(self.assetsFolder .. "homer.png")
+    self.images = loadImagesFromDir(self.assetsFolder)
+    self.background = self.images["bg"]
+    self.homie = self.images["homie"]
+    self.homer = self.images["homer"]
     self.homerLaugh = love.audio.newSource(self.assetsFolder .. "homerLaugh.mp3", "static")
     self.homieGrrr = love.audio.newSource(self.assetsFolder .. "GRRR.mp3", "static")
 

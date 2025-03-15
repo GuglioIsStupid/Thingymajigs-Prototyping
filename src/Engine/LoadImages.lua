@@ -17,17 +17,17 @@ function recursiveEnumerate(folder, file)
     return files
 end
 
-function loadImages()
-    local files = recursiveEnumerate("Assets")
+function loadImagesFromDir(dir)
+    local files = recursiveEnumerate(dir)
+    local images = {}
     for _, file in ipairs(files) do
         local filename = file:match(".+/(.+)")
         local ext = filename:match(".+%.(.+)")
         local name = filename:match("(.+)%..+")
         if ext == "png" or ext == "jpg" or ext == "jpeg" then
             print("Loading image: "..name)
-            IMAGES[name] = love.graphics.newImage(file)
+            images[name] = love.graphics.newImage(file)
         end
     end
+    return images
 end
-
-loadImages()
