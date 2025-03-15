@@ -13,7 +13,7 @@ VarTween = require(path .. "Backend.VarTween")
 
 TweenManager = require(path .. "Tween")
 
-LoadImages = require(path .. "LoadImages")
+require(path .. "RecursiveLoading")
 
 -- UI ELEMENTS
 Button = require(path .. "UI.Button")

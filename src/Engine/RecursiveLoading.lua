@@ -1,5 +1,3 @@
-IMAGES = {}
-
 function recursiveEnumerate(folder, file)
     local lfs = love.filesystem
     local filesTable = lfs.getDirectoryItems(folder)
@@ -25,9 +23,22 @@ function loadImagesFromDir(dir)
         local ext = filename:match(".+%.(.+)")
         local name = filename:match("(.+)%..+")
         if ext == "png" or ext == "jpg" or ext == "jpeg" then
-            print("Loading image: "..name)
             images[name] = love.graphics.newImage(file)
         end
     end
     return images
+end
+
+function loadSoundsFromDir(dir)
+    local files = recursiveEnumerate(dir)
+    local sounds = {}
+    for _, file in ipairs(files) do
+        local filename = file:match(".+/(.+)")
+        local ext = filename:match(".+%.(.+)")
+        local name = filename:match("(.+)%..+")
+        if ext == "mp3" or ext == "wav" or ext == "ogg" then
+            sounds[name] = love.audio.newSource(file, "static")
+        end
+    end
+    return sounds
 end
