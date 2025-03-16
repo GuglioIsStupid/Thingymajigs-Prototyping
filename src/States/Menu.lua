@@ -23,9 +23,34 @@ function Menu:enter()
             CURRENT_PROMPT = "NONE"
         end)
     }
+    
+    --[[ self.logo = {
+        image = love.graphics.newImage("Assets/Menus/awesomesauce.png"),
+        frames = {},
+        currentFrame = 1,
+        fps = 12,
+        timer = 0,
+        fw = 720,
+        fh = 720,
+    }
+
+    local rows, cols = self.logo.image:getHeight()/self.logo.fh, self.logo.image:getWidth()/self.logo.fw
+    for i = 1, rows do
+        for j = 1, cols do
+            table.insert(self.logo.frames, love.graphics.newQuad((j-1)*self.logo.fw, (i-1)*self.logo.fh, self.logo.fw, self.logo.fh, self.logo.image:getDimensions()))
+        end
+    end
+
+    self.menuMusic = love.audio.newSource("Assets/Menus/awesomesauce.mp3", "stream")
+    self.menuMusic:setLooping(true)
+    self.menuMusic:play() ]]
 end
 
 function Menu:update(dt)
+    --[[ self.logo.currentFrame = self.logo.currentFrame + self.logo.fps * dt
+    if self.logo.currentFrame >= #self.logo.frames+1 then
+        self.logo.currentFrame = 1
+    end ]]
 end
 
 function Menu:mousepressed(x, y, button)
@@ -57,6 +82,8 @@ end
 
 function Menu:draw()
     self.agoriBTN:draw()
+
+    --[[ love.graphics.draw(self.logo.image, self.logo.frames[math.floor(self.logo.currentFrame)], Resolution.Width/2-self.logo.fw/2, Resolution.Height/2-self.logo.fh/2) ]]
 
     if CURRENT_PROMPT == "AGORI_CONFIRM" then
         love.graphics.rectangle("fill", Resolution.Width/2-200, Resolution.Height/2-100, 400, 200)
