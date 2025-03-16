@@ -12,6 +12,10 @@ function Game:mousepressed(x, y, button)
     microgameHandler:mousepressed(x, y, button)
 end
 
+function Game:keypressed(key)
+    microgameHandler:keypressed(key)
+end
+
 function Game:draw()
     microgameHandler:draw()
 end
