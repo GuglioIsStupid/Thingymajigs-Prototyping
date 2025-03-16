@@ -5,6 +5,7 @@ function rpgBattle:start()
 end
 
 function rpgBattle:preload()
+    self.isBossMicrogame = true
     self.directions = "Win the Battle!"
     self.enemiesInBattle = {}
 end

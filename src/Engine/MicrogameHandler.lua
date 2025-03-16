@@ -116,7 +116,7 @@ function MicrogameHandler:update(dt)
     else
         if self.currentMicrogame then
             if self.currentMicrogame.update then self.currentMicrogame:update(dt) end
-            if self.currentMicrogame:checkForCompletion() and self.microgameTime <= 0 then
+            if not self.currentMicrogame.isBossMicrogame and self.currentMicrogame:checkForCompletion() and self.microgameTime <= 0 then
                 self.completedMicrogames = self.completedMicrogames + 1
                 if self.currentMicrogame.finish then
                     self.currentMicrogame:finish()
@@ -131,7 +131,7 @@ function MicrogameHandler:update(dt)
                 -- transition to next
                 self.microgameTransition = self.basemicrogameTransition
                 self.microgameTransitionTimer = 0
-            elseif self.microgameTime <= 0 then
+            elseif self.microgameTime <= 0 and not self.currentMicrogame.isBossMicrogame then
                 self.microgameTransition = self.currentMicrogame:fail()
                 if self.currentMicrogame.finish then
                     self.currentMicrogame:finish()
@@ -142,8 +142,24 @@ function MicrogameHandler:update(dt)
                 self.microgameTransition = self.basemicrogameTransition
                 self.microgameTransitionTimer = 0
                 self.wasCompleted = false
-            else
+            elseif not self.currentMicrogame.isBossMicrogame then
                 self.microgameTime = self.microgameTime - dt
+            elseif self.currentMicrogame.isBossMicrogame then
+                if self.currentMicrogame:checkForCompletion() then
+                    self.completedMicrogames = self.completedMicrogames + 1
+                    if self.currentMicrogame.finish then
+                        self.currentMicrogame:finish()
+                    end
+                    if self.completedMicrogames % self.speedIncreaseInterval == 0 then
+                        self.currentSpeed = self.currentSpeed + 0.25
+                        print("Speed increased to " .. self.currentSpeed)
+                    end
+                    self.wasCompleted = true
+
+                    -- transition to next
+                    self.microgameTransition = self.basemicrogameTransition
+                    self.microgameTransitionTimer = 0
+                end
             end
         else
             -- transition

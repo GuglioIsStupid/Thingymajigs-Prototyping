@@ -80,7 +80,7 @@ function love.load()
     --microgameHandler:addMicrogame(blendingIn)
    -- microgameHandler:addMicrogame(findHim)
   ----  microgameHandler:addMicrogame(catchMicrogame)
-  --  microgameHandler:addMicrogame(harmoni)
+    --microgameHandler:addMicrogame(harmoni)
     microgameHandler:addMicrogame(rpgBattle)
 
     --[[ Timer.after(1, function ()

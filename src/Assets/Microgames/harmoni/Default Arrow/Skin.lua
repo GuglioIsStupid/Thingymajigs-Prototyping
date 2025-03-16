@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 
 Skin.Params = {
     ["Note Size"] = 125,                          -- size of the notes, pretty obvious i think

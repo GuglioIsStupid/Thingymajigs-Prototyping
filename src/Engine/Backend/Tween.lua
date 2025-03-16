@@ -53,6 +53,7 @@ end
 
 ---@param delay number
 function Tween:wait(delay)
+    ---@diagnostic disable-next-line: param-type-mismatch
     return self:addChainedTween(Tween:new({type = TweenType.ONESHOT}, self.manager))
 end
 
