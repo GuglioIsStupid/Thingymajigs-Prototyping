@@ -18,6 +18,15 @@ function Timer.after(duration, callback, repeatCount)
     return timer
 end
 
+function Timer.cancel(ref)
+    if not ref then return end
+    for i = #Timer._currentTimers, 1, -1 do
+        if Timer._currentTimers[i] == ref then
+            table.remove(Timer._currentTimers, i)
+        end
+    end
+end
+
 function Timer.update(dt)
     for i = #Timer._currentTimers, 1, -1 do
         local timer = Timer._currentTimers[i]

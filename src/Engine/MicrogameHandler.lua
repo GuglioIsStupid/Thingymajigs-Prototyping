@@ -13,7 +13,7 @@ function MicrogameHandler:new()
     self.currentZoom = 1
     -- Every 5 microgames, the speed will increase by 0.25
     self.speedIncreaseInterval = 5
-    
+
     self.microgameTimeSeconds = 5
     self.microgameTime = self.microgameTimeSeconds
     self.microgameTimeDecrease = 0.1
