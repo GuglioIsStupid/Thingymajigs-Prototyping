@@ -1,7 +1,9 @@
 local BaseMicrogame = MiniClass:extend("BaseMicrogame")
 
 function BaseMicrogame:preload()
+    self.isBossMicrogame = false
     self.directions = "RESET ME!"
+    self.ok = false
 end
 
 function BaseMicrogame:start()

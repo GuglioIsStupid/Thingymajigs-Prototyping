@@ -80,7 +80,7 @@ function love.load()
     --microgameHandler:addMicrogame(blendingIn)
    -- microgameHandler:addMicrogame(findHim)
   ----  microgameHandler:addMicrogame(catchMicrogame)
-  --  microgameHandler:addMicrogame(harmoni)
+    --microgameHandler:addMicrogame(harmoni)
     microgameHandler:addMicrogame(rpgBattle)
 
     --[[ Timer.after(1, function ()
@@ -91,7 +91,7 @@ function love.load()
         TweenManager:tween(obj, {y = 400}, 1 / microgameHandler.currentSpeed, {type = TweenType.PINGPONG, ease = "bounceOut"})
     end]]
 
-    SwitchState("menu")
+    SwitchState("game")
 
     --if discordIPC then discordIPC:initID("<PUT_ID_HERE_WHEN_WE_HAVE_ONE>") end
 end
