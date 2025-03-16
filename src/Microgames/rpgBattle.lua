@@ -6,15 +6,18 @@ end
 
 function rpgBattle:preload()
     self.directions = "Win the Battle!"
+    self.enemiesInBattle = {}
 end
 
 function rpgBattle:onLoad()
+    print("testW")
+    self.selectedAttack = 1
     self.superMark = {
         name = "Mark",
         health = 6,
         maxHealth = 6,
         attacks = {
-            {name = "Jump", damage = 2, canHitAirEnemy = true, desc = "A regular Jump. Deals 2 damage. Don't jump on spiked enemies, that probably would hurt."},
+            {name = "Jump", damage = 2, canHitAirEnemy = true, desc = "A regular Jump. Deals 2 damage. Don't jump on spiked enemies, that would probably hurt."},
             {name = "Hammer", damage = 3, canHitAirEnemy = false, desc = "You hit your enemy with a fucking hammer. What the fuck is wrong with you? Deals 3 damage, can't reach flying enemies."},
         },
         x = 0,
@@ -100,7 +103,6 @@ function rpgBattle:update(dt)
 end
 
 function rpgBattle:drawAttacksBox()
-    
     local x = 200
     local y = 200
     for index, Attack in ipairs(self.superMark.attacks) do
@@ -110,6 +112,12 @@ function rpgBattle:drawAttacksBox()
         love.graphics.rectangle("line", x,y+25*(index-1),#test*6.6,25)
         love.graphics.print(Attack.name .. "  |  " .. Attack.desc, x+25,y+25*(index-1)+5)
     end
+    
+end
+
+function rpgBattle:doAttack(attack, attacker, target)
+    print("ATTACK")
+    Timer.tween(1, attacker, {x = target.x-20}, "linear")
 end
 
 function rpgBattle:checkForCompletion()
@@ -128,7 +136,18 @@ function rpgBattle:draw()
 end
 
 function rpgBattle:keypressed(key)
-    self.ok = true
+    print("WHY")
+    if key == "return" then print("coc") end
+    if self.playersTurn and not self.doingAttack then
+        if key == "w" or key == "up" then
+            self.selectedAttack = self.selectedAttack - 1
+        elseif key == "s" or key == "down" then
+            self.selectedAttack = self.selectedAttack + 1
+        elseif key == "return" then
+            print(":WHAT")
+            self:doAttack(self.superMark.attacks[selectedAttack], self.superMark, self.enemiesInBattle[1])
+        end
+    end
 end
 
 function rpgBattle:mousepressed(button)

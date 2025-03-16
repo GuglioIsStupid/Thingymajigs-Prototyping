@@ -17,6 +17,7 @@ function testMicrogame:draw()
 end
 
 function testMicrogame:keypressed(key) 
+    print("are")
     self.ok = true
 end
 

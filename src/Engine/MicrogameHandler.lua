@@ -157,7 +157,7 @@ function MicrogameHandler:draw()
     love.graphics.translate(1280/2, 720/2)
     love.graphics.scale(self.currentZoom, self.currentZoom)
     love.graphics.translate(-1280/2, -720/2)
-    love.graphics.rectangle("fill", 0, 0, 1280, 720)
+  --  love.graphics.rectangle("fill", 0, 0, 1280, 720)
     if self.currentMicrogame and self.displayMicrogame then
         self.currentMicrogame:draw()
     end
