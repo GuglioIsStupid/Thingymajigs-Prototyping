@@ -108,6 +108,11 @@ function MicrogameHandler:_getNextMicrogame()
     repeat
         self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
     until self.currentMicrogame ~= self.lastMicrogame
+    if not self.currentMicrogame then
+        -- reset bag, try again
+        for i = 1, #self.microgames do table.insert(self.microgameRandomBag, i) end
+        return self:_getNextMicrogame()
+    end
     self.lastMicrogame = self.currentMicrogame
     return self.currentMicrogame
 end
