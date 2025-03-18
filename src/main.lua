@@ -81,7 +81,15 @@ function love.load()
    -- microgameHandler:addMicrogame(findHim)
   ----  microgameHandler:addMicrogame(catchMicrogame)
     --microgameHandler:addMicrogame(harmoni)
-    microgameHandler:addMicrogame(rpgBattle)
+    --microgameHandler:addMicrogame(rpgBattle)
+    --microgameHandler:addMicrogame(minesweeper)
+
+    for i, microgame in ipairs(MICROGAMES) do
+        microgameHandler:addMicrogame(microgame)
+    end
+    for i, microgame in ipairs(BOSSGAMES) do
+        microgameHandler:addBossGame(microgame)
+    end
 
     --[[ Timer.after(1, function ()
         print("1 second has passed")
