@@ -3,16 +3,18 @@ local MicrogameHandler = MiniClass:extend()
 function MicrogameHandler:new()
     MiniClass.new(self)
     self.microgames, self.microgameRandomBag = {}, {}
+    self.bossgames, self.bossRandomBag = {}, {}
     self.currentMicrogame, self.lastMicrogame, self.microgameTransition = nil, nil, nil
     self.microgameTransitionTimer, self.microGameTransitionTime = 0, 1
     self.currentSpeed, self.completedMicrogames, self.currentZoom = 1, 0, 1
-    self.speedIncreaseInterval, self.bpm = 5, 120
+    self.speedIncreaseInterval, self.bpm = 2, 120
     self.microgameBeatTime, self.microgameTime = 0, 0
     self.beatTimeMax = 60 / self.bpm
     self.beat = 0
-    self.microgameTimeDecreaseInterval, self.wasCompleted = 5, false
+    self.microgameTimeDecreaseInterval, self.wasCompleted = 4, false
     self.displayDirections, self.displayMicrogame, self.firstGame = false, true, true
     self._scaleTween = nil
+    self.loadBossGame = false
     
     self.basemicrogameTransition = {
         update = function(_, parent, dt) parent.microgameTransitionTimer = parent.microgameTransitionTimer + dt end,
@@ -27,9 +29,17 @@ function MicrogameHandler:addMicrogame(microgame)
     table.insert(self.microgames, microgame)
 end
 
+function MicrogameHandler:addBossGame(microgame)
+    if microgame.preload then microgame:preload() end
+    table.insert(self.bossgames, microgame)
+end
+
 function MicrogameHandler:update(dt)
     if #self.microgameRandomBag == 0 then
         for i = 1, #self.microgames do table.insert(self.microgameRandomBag, i) end
+    end
+    if #self.bossRandomBag == 0 then
+        for i = 1, #self.bossgames do table.insert(self.bossRandomBag, i) end
     end
 
     if self.microgameTransition then
@@ -105,8 +115,15 @@ function MicrogameHandler:mousepressed(x, y, button)
 end
 
 function MicrogameHandler:_getNextMicrogame()
+    self.beat = 0
     repeat
-        self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+        if self.loadBossGame then
+            self.currentMicrogame = self.bossgames[table.remove(self.bossRandomBag, love.math.random(1, #self.bossRandomBag))]
+            print(self.currentMicrogame._NAME)
+            self.loadBossGame = false
+        else
+            self.currentMicrogame = self.microgames[table.remove(self.microgameRandomBag, love.math.random(1, #self.microgameRandomBag))]
+        end
     until self.currentMicrogame ~= self.lastMicrogame
     if not self.currentMicrogame then
         -- reset bag, try again
@@ -182,7 +199,8 @@ end
 function MicrogameHandler:_increaseSpeedIfNeeded()
     if self.completedMicrogames % self.speedIncreaseInterval == 0 then
         self.currentSpeed = self.currentSpeed + 0.25
-        print("Speed increased to " .. self.currentSpeed)
+        self.loadBossGame = true
+        print("Speed increased to " .. self.currentSpeed, self.loadBossGame)
     end
 end
 

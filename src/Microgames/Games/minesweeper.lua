@@ -210,7 +210,7 @@ function minesweeperGame:draw()
 
     love.graphics.pop()
 
-    love.graphics.printf("Mines: " .. #self.mineCount, 0, 75, Resolution.Width, "center")
+    love.graphics.printf("Mines: " .. self.mineCount, 0, 75, Resolution.Width, "center")
 end
 
 return minesweeperGame
