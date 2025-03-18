@@ -3,10 +3,14 @@ require("Engine")
 require("Microgames")
 
 local state = ""
-local discordIPC_OK
+local discordIPC_OK, ASL_OK
 discordIPC_OK, discordIPC = pcall(require, "Lib.discordIPC")
 if not discordIPC_OK then discordIPC = nil end
 if type(discordIPC) ~= "table" then discordIPC = nil end
+
+ASL_OK, love.audio.newAdvancedSource = pcall(require, "Lib.ASL.asl")
+if not ASL_OK then love.audio.newAdvancedSource = nil end
+if type(love.audio.newAdvancedSource) ~= "function" then love.audio.newAdvancedSource = nil end
 
 STATES = {
     intro = require("States.Intro"),
