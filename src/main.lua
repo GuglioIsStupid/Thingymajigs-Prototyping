@@ -73,7 +73,10 @@ function IPCActivity(activity)
     if discordIPC then
         discordIPC.activity = activity
 
-        discordIPC:sendActivity()
+        local ok, err = pcall(discordIPC.sendActivity, discordIPC)
+        if not ok then
+            print("Error sending activity: " .. err)
+        end
     end
 end
 
