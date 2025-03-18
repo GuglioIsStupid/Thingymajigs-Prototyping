@@ -76,14 +76,6 @@ end
 function love.load()
     microgameHandler = MicrogameHandler:new()
 
-  -- microgameHandler:addMicrogame(testMicrogame)
-    --microgameHandler:addMicrogame(blendingIn)
-   -- microgameHandler:addMicrogame(findHim)
-  ----  microgameHandler:addMicrogame(catchMicrogame)
-    --microgameHandler:addMicrogame(harmoni)
-    --microgameHandler:addMicrogame(rpgBattle)
-    --microgameHandler:addMicrogame(minesweeper)
-
     for i, microgame in ipairs(MICROGAMES) do
         microgameHandler:addMicrogame(microgame)
     end
