@@ -5,8 +5,10 @@ function Debug:enter()
     microgameList = {}
     selectedMicrogame = 1
     for index, Microgame in ipairs(microgameHandler.microgames) do
-        print(Microgame._NAME)
-        table.insert(microgameList, {name = Microgame._NAME, directions = Microgame.directions, reference = Microgame})
+        table.insert(microgameList, {name = Microgame._NAME, isBossStage=false, directions = Microgame.directions, reference = Microgame})
+    end
+    for _, Bossgame in ipairs(microgameHandler.bossgames) do
+        table.insert(microgameList, {name = Bossgame._NAME, isBossStage=true, directions = Bossgame.directions, reference = Bossgame})
     end
 end
 
@@ -54,8 +56,7 @@ function Debug:draw()
 
             if index == selectedMicrogame then  love.graphics.setColor(0,1,1) else love.graphics.setColor(1,1,1) end
             love.graphics.rectangle("line", x, y*index, width, height)
-            love.graphics.print(Microgame.name .. "   " .. Microgame.directions, x, y*index+5)
-            
+            love.graphics.print(Microgame.name .. (Microgame.isBossStage and " [Boss]" or "") .. "\t" .. Microgame.directions, x, y*index+5)
         end
     else
         currentMicrogame:draw()
