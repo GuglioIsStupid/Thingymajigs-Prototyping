@@ -4,6 +4,7 @@ function BaseMicrogame:preload()
     self.isBossMicrogame = false
     self.directions = "RESET ME!"
     self.ok = false
+    self.didFail = false
 end
 
 function BaseMicrogame:start()
@@ -18,6 +19,10 @@ end
 
 function BaseMicrogame:checkForCompletion()
     return self.ok
+end
+
+function BaseMicrogame:checkForFailure()
+    return self.didFail
 end
 
 function BaseMicrogame:draw()

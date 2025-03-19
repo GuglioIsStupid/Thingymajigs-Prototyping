@@ -7,10 +7,11 @@ function catchGame:preload()
         y = 720 - 350,
         height = 200
     }
+    self.curBeat = 0
 end
 
 function catchGame:onLoad()
-    self.randDropTime = love.math.random(0.5, microgameHandler.microgameTime * 0.7)
+    self.randBeatDrop = love.math.random(1, 3)
     self.curTime = 0
     self.ok = false
     self.object = {
@@ -19,30 +20,34 @@ function catchGame:onLoad()
         velY = 600,
         caught = false
     }
+    self.curBeat = 0
 end
 
 function catchGame:start()
-    self.going = true
+    self.going = false
 end
 
 function catchGame:update(dt)
-    if self.going then
-        self.curTime = self.curTime + dt
+    if self.going and not self.object.caught then
+        self.object.y = self.object.y + self.object.velY * dt
+        self.object.velY = self.object.velY + self.object.speedUp * dt
+    end
+end
 
-        if self.curTime >= self.randDropTime and not self.object.caught then
-            self.object.y = self.object.y + self.object.velY * dt
-            self.object.velY = self.object.velY + self.object.speedUp * dt
-        end
+function catchGame:onBeat()
+    self.curBeat = self.curBeat + 1
+    if self.curBeat == self.randBeatDrop then
+        self.going = true
     end
 end
 
 function catchGame:mousepressed(_, _, button)
-    if self.going then
-        if (self.object.y + 100) >= self.catchZone.y and self.object.y <= (self.catchZone.y + self.catchZone.height) and not self.failed then
-            self.object.caught = true
+    if button == 1 then
+        if self.object.y > self.catchZone.y and self.object.y < self.catchZone.y + self.catchZone.height then
             self.ok = true
+            self.object.caught = true
         else
-            self.failed = true
+            self.ok = false
         end
     end
 end

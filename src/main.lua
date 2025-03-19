@@ -3,10 +3,14 @@ require("Engine")
 require("Microgames")
 
 local state = ""
-local discordIPC_OK
+local discordIPC_OK, ASL_OK
 discordIPC_OK, discordIPC = pcall(require, "Lib.discordIPC")
 if not discordIPC_OK then discordIPC = nil end
 if type(discordIPC) ~= "table" then discordIPC = nil end
+
+ASL_OK, love.audio.newAdvancedSource = pcall(require, "Lib.ASL.asl")
+if not ASL_OK then love.audio.newAdvancedSource = nil end
+if type(love.audio.newAdvancedSource) ~= "function" then love.audio.newAdvancedSource = nil end
 
 STATES = {
     intro = require("States.Intro"),
@@ -69,21 +73,22 @@ function IPCActivity(activity)
     if discordIPC then
         discordIPC.activity = activity
 
-        discordIPC:sendActivity()
+        local ok, err = pcall(discordIPC.sendActivity, discordIPC)
+        if not ok then
+            print("Error sending activity: " .. err)
+        end
     end
 end
 
 function love.load()
     microgameHandler = MicrogameHandler:new()
 
-    Mouse = {x = 0, y = 0}
-
-   microgameHandler:addMicrogame(testMicrogame)
-    microgameHandler:addMicrogame(blendingIn)
-    microgameHandler:addMicrogame(findHim)
-    microgameHandler:addMicrogame(catchMicrogame)
-    microgameHandler:addMicrogame(harmoni)
-    microgameHandler:addMicrogame(rpgBattle)
+    for i, microgame in ipairs(MICROGAMES) do
+        microgameHandler:addMicrogame(microgame)
+    end
+    for i, microgame in ipairs(BOSSGAMES) do
+        microgameHandler:addBossGame(microgame)
+    end
 
     --[[ Timer.after(1, function ()
         print("1 second has passed")
