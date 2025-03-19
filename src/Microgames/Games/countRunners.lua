@@ -45,10 +45,10 @@ function countRunners:keypressed(key)
     self.ok = true
 end
 
-function countRunners:mousepressed(button)
+function countRunners:mousepressed(x, y, button)
     if button == 1 then
-        if Mouse.x > self.button.x and Mouse.x < self.button.x+self.button.width then
-            if Mouse.y > self.button and Mouse.y < self.button.y+self.button.height then
+        if x > self.button.x and x < self.button.x+self.button.width then
+            if y > self.button and y < self.button.y+self.button.height then
                 self.button.down = true
                 self.count = self.count + 1
             end

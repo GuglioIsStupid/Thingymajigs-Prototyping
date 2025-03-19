@@ -106,7 +106,6 @@ end
 function love.update(dt)
     Timer.update(dt)
     TweenManager:update(dt)
-    Mouse.x, Mouse.y = love.mouse.getPosition()
     StateCallback(state, "update", dt)
 end
 

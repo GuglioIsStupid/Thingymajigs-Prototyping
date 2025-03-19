@@ -13,7 +13,6 @@ end
 function minesweeperGame:onLoad()
     self.grid = {}
 
-    -- Create a grid with empty tiles
     for x = 1, self.gridSize do
         self.grid[x] = {}
         for y = 1, self.gridSize do
@@ -26,7 +25,6 @@ function minesweeperGame:onLoad()
         end
     end
 
-    -- Place mines randomly
     local minesPlaced = 0
     while minesPlaced < self.mineCount do
         local x = love.math.random(1, self.gridSize)
@@ -38,7 +36,6 @@ function minesweeperGame:onLoad()
         end
     end
 
-    -- Calculate surrounding mines for each tile
     for x = 1, self.gridSize do
         for y = 1, self.gridSize do
             if not self.grid[x][y].mine then
@@ -53,18 +50,13 @@ function minesweeperGame:start()
 end
 
 function minesweeperGame:update(dt)
-    if self.going and not self.gameOver then
-        -- Game logic updates can go here
-    end
 end
 
--- Function to get the number of surrounding mines for a tile
 function minesweeperGame:getSurroundingMines(x, y)
     local surroundingMines = 0
     for i = -1, 1 do
         for j = -1, 1 do
             if i == 0 and j == 0 then
-                -- Skip the current tile
                 goto continue
             end
 
@@ -88,14 +80,14 @@ function minesweeperGame:mousepressed(x, y, button)
         local gridX = math.floor(x / self.tileSize) + 1
         local gridY = math.floor(y / self.tileSize) + 1
 
-        if button == 1 then  -- Left click (Reveal tile)
+        if button == 1 then
             if not self.grid[gridX] or not self.grid[gridX][gridY] then
                 return
             end
             if not self.grid[gridX][gridY].flagged then
                 self:revealTile(gridX, gridY)
             end
-        elseif button == 2 then  -- Right click (Flag tile)
+        elseif button == 2 then
             self:toggleFlag(gridX, gridY)
         end
     end
@@ -115,7 +107,6 @@ function minesweeperGame:revealTile(x, y)
         for i = -1, 1 do
             for j = -1, 1 do
                 if i == 0 and j == 0 then
-                    -- Skip the current tile
                     goto continue
                 end
 
@@ -154,6 +145,7 @@ function minesweeperGame:checkWin()
         self.ok = true
     end
 end
+
 -- blue, green, red, purple, orange, yellow, cyan, pink
 local bombColourOrder = {
     {0, 0, 1},
@@ -172,7 +164,6 @@ function minesweeperGame:draw()
     love.graphics.push()
     love.graphics.translate(Resolution.Width / 2 - (self.gridSize * self.tileSize) / 2, Resolution.Height / 2 - (self.gridSize * self.tileSize) / 2)
     
-    -- Draw the grid
     for x = 1, self.gridSize do
         for y = 1, self.gridSize do
             local tile = self.grid[x][y]
@@ -187,7 +178,6 @@ function minesweeperGame:draw()
                     love.graphics.print(tile.surroundingMines, xPos + 18, yPos + 18)
                 end
 
-                -- if bomb, draw a circle
                 if tile.mine then
                     love.graphics.setColor(1, 0, 0)
                     love.graphics.circle("fill", xPos + 25, yPos + 25, 10)
