@@ -82,6 +82,7 @@ end
 
 function love.load()
     microgameHandler = MicrogameHandler:new()
+    Mouse ={}
 
     for i, microgame in ipairs(MICROGAMES) do
         microgameHandler:addMicrogame(microgame)
